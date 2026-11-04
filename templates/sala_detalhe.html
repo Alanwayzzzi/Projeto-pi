@@ -32,7 +32,7 @@
         {% if eh_dono %}
           <form method="post" action="{% url 'objeto_excluir' objeto.pk %}" data-confirmar="Excluir “{{ objeto.nome }}”?">
             {% csrf_token %}
-            <button type="submit" class="btn-perigo">Excluir</button>
+            <button type="submit" class="btn-perigo">Excluir item</button>
           </form>
         {% endif %}
       </article>
