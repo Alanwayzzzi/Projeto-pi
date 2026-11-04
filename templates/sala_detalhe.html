@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block titulo %}{{ sala.nome }} · PerdeuAchou{% endblock %}
+
+{% block conteudo %}
+  <a class="voltar" href="{% url 'salas' %}">← Minhas salas</a>
+
+  <section class="sala-banner cor-{{ sala.cor_indice }}">
+    <h1>{{ sala.nome }}</h1>
+    <p>{{ sala.descricao }}</p>
+    <p class="codigo">Código para entrar: <strong>{{ sala.codigo }}</strong></p>
+  </section>
+
+  <div class="barra-objetos">
+    <h2>Objetos encontrados</h2>
+    {% if eh_dono %}
+      <button type="button" class="btn-azul" data-abrir="modal-objeto">Adicionar objeto</button>
+    {% endif %}
+  </div>
+
+  <div class="lista-objetos">
+    {% for objeto in objetos %}
+      <article class="objeto-card">
+        <div class="objeto-icone">{{ objeto.nome|slice:":1"|upper }}</div>
+        <div class="objeto-info">
+          <h3>{{ objeto.nome }}</h3>
+          {% if objeto.descricao %}<p>{{ objeto.descricao }}</p>{% endif %}
+          <small>
+            {% if objeto.local_encontrado %}Encontrado em {{ objeto.local_encontrado }}. {% endif %}
+            Adicionado em {{ objeto.criado_em|date:"d/m/Y" }}{% if objeto.adicionado_por %} por {{ objeto.adicionado_por.username }}{% endif %}.
+          </small>
+        </div>
+        {% if eh_dono %}
+          <form method="post" action="{% url 'objeto_excluir' objeto.pk %}" data-confirmar="Excluir “{{ objeto.nome }}”?">
+            {% csrf_token %}
+            <button type="submit" class="btn-perigo">Excluir</button>
+          </form>
+        {% endif %}
+      </article>
+    {% empty %}
+      <div class="vazio">
+        <p>Nenhum objeto cadastrado nesta sala.</p>
+        {% if eh_dono %}<p>Use “Adicionar objeto” para registrar o primeiro.</p>{% endif %}
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if eh_dono %}
+    <dialog id="modal-objeto">
+      <form method="post" action="{% url 'objeto_adicionar' sala.pk %}">
+        {% csrf_token %}
+        <h3>Adicionar objeto</h3>
+        <label>Objeto <input name="nome" maxlength="100" required></label>
+        <label>Onde foi encontrado <input name="local_encontrado" maxlength="100"></label>
+        <label>Descrição <textarea name="descricao" rows="3"></textarea></label>
+        <div class="modal-botoes">
+          <button type="button" class="btn-texto" data-fechar>Cancelar</button>
+          <button type="submit" class="btn-azul">Adicionar</button>
+        </div>
+      </form>
+    </dialog>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block titulo %}Minhas salas · PerdeuAchou{% endblock %}
+
+{% block acoes %}
+  <div class="menu">
+    <button class="btn-icone" type="button" data-menu="menu-mais" aria-label="Criar ou entrar em uma sala">+</button>
+    <div class="menu-lista" id="menu-mais" hidden>
+      <button type="button" data-abrir="modal-entrar">Entrar em uma sala</button>
+      <button type="button" data-abrir="modal-criar">Criar sala</button>
+    </div>
+  </div>
+{% endblock %}
+
+{% block conteudo %}
+  <div class="lista-salas">
+    {% for sala in salas %}
+      <a class="sala-card" href="{% url 'sala_detalhe' sala.pk %}">
+        <div class="sala-topo cor-{{ sala.cor_indice }}">
+          <h2>{{ sala.nome }}</h2>
+          <p>{{ sala.descricao|default:"Sem descrição" }}</p>
+        </div>
+        <div class="sala-rodape">
+          <span>{{ sala.objetos.count }} objeto{{ sala.objetos.count|pluralize }} encontrado{{ sala.objetos.count|pluralize }}</span>
+          <span>Criada por {{ sala.criador.username }}</span>
+        </div>
+      </a>
+    {% empty %}
+      <div class="vazio">
+        <p>Você ainda não faz parte de nenhuma sala.</p>
+        <p>Use o botão <strong>+</strong> para criar uma sala ou entrar com um código.</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  <dialog id="modal-criar">
+    <form method="post" action="{% url 'sala_criar' %}">
+      {% csrf_token %}
+      <h3>Criar sala</h3>
+      <label>Nome da sala <input name="nome" maxlength="80" required></label>
+      <label>Descrição <input name="descricao" maxlength="200"></label>
+      <div class="modal-botoes">
+        <button type="button" class="btn-texto" data-fechar>Cancelar</button>
+        <button type="submit" class="btn-azul">Criar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="modal-entrar">
+    <form method="post" action="{% url 'sala_entrar' %}">
+      {% csrf_token %}
+      <h3>Entrar em uma sala</h3>
+      <label>Código da sala <input name="codigo" maxlength="12" required></label>
+      <div class="modal-botoes">
+        <button type="button" class="btn-texto" data-fechar>Cancelar</button>
+        <button type="submit" class="btn-azul">Entrar</button>
+      </div>
+    </form>
+  </dialog>
+{% endblock %}

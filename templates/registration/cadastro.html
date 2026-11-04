@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block titulo %}Criar conta · PerdeuAchou{% endblock %}
+
+{% block conteudo %}
+  <form class="auth-card" method="post">
+    {% csrf_token %}
+    <h1>Criar conta</h1>
+    {% for campo in form %}
+      <label>{{ campo.label }} {{ campo }}</label>
+      {% for erro in campo.errors %}<p class="erro">{{ erro }}</p>{% endfor %}
+    {% endfor %}
+    <button type="submit" class="btn-azul">Criar conta</button>
+    <p class="auth-troca">Já tem conta? <a href="{% url 'login' %}">Entrar</a></p>
+  </form>
+{% endblock %}
