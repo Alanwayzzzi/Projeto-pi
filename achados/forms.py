@@ -1,7 +1,6 @@
 from django import forms
 from .models import Objeto, Sala
 
-
 class SalaForm(forms.ModelForm):
     class Meta:
         model = Sala

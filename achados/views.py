@@ -5,14 +5,12 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
-
 from .forms import ObjetoForm, SalaForm
 from .models import Objeto, Sala
 
 
 def bem_vindo(request):
     return render(request, "bem_vindo.html")
-
 
 def cadastro(request):
     form = UserCreationForm(request.POST or None)
@@ -22,12 +20,10 @@ def cadastro(request):
         return redirect("salas")
     return render(request, "registration/cadastro.html", {"form": form})
 
-
 @login_required
 def salas(request):
     """Salas das quais o usuário faz parte (criadas por ele ou em que entrou)."""
     return render(request, "salas.html", {"salas": request.user.salas.all()})
-
 
 @login_required
 @require_POST
@@ -43,7 +39,6 @@ def sala_criar(request):
     messages.error(request, "Não foi possível criar a sala. Confira o nome.")
     return redirect("salas")
 
-
 @login_required
 @require_POST
 def sala_entrar(request):
@@ -57,7 +52,6 @@ def sala_entrar(request):
     messages.success(request, f"Você entrou em “{sala.nome}”.")
     return redirect("sala_detalhe", pk=sala.pk)
 
-
 @login_required
 def sala_detalhe(request, pk):
     sala = get_object_or_404(request.user.salas, pk=pk)
@@ -70,7 +64,6 @@ def sala_detalhe(request, pk):
             "eh_dono": sala.criador_id == request.user.id,
         },
     )
-
 
 @login_required
 @require_POST
@@ -89,7 +82,6 @@ def objeto_adicionar(request, pk):
         messages.error(request, "Informe o nome do objeto.")
     return redirect("sala_detalhe", pk=sala.pk)
 
-
 @login_required
 @require_POST
 def objeto_excluir(request, pk):
@@ -100,7 +92,6 @@ def objeto_excluir(request, pk):
     objeto.delete()
     messages.success(request, "Objeto excluído.")
     return redirect("sala_detalhe", pk=sala_pk)
-
 
 @login_required
 def perfil(request):

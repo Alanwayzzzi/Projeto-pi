@@ -1,7 +1,5 @@
 from django.contrib import admin
-
 from .models import Objeto, Sala
-
 
 @admin.register(Sala)
 class SalaAdmin(admin.ModelAdmin):

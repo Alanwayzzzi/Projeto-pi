@@ -1,11 +1,10 @@
 import secrets
-
 from django.conf import settings
 from django.db import models
 
 
 def gerar_codigo():
-    """Código curto que os colegas usam para entrar na sala (ex.: 'a3f9c1')."""
+    "Código curto que os colegas usam para entrar na sala (ex.: 'a3f9c1')."
     return secrets.token_hex(3)
 
 
