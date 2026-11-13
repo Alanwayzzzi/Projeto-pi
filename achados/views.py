@@ -22,7 +22,6 @@ def cadastro(request):
 
 @login_required
 def salas(request):
-    """Salas das quais o usuário faz parte (criadas por ele ou em que entrou)."""
     return render(request, "salas.html", {"salas": request.user.salas.all()})
 
 @login_required
